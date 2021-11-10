@@ -1,0 +1,42 @@
+.gameBoard-Container {
+   display: grid;
+   grid-template-columns: 100px 100px 100px;
+   grid-template-rows: auto;
+   justify-content: center;
+   margin-top: 50px;
+}
+
+.board-spot {
+    width: 100px; 
+    height: 100px;
+    background-color: lightseagreen; 
+    text-align: center;
+    border: 1px solid black;
+}
+
+.player-Container {
+    display: flex; 
+    justify-content: center; 
+    margin-top: 20px;
+    gap: 5px;
+}
+
+.temp-Container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.player-Button {
+    height: 50px;
+    
+}
+
+.input-Player {
+    flex-direction: column;
+    width: 100px;
+}
+
+.player-Input-Text {
+    width: 100px;
+    margin-top: 15px;
+}
