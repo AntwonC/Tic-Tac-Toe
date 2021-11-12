@@ -32,6 +32,11 @@ function createPlayer(playerInput, index) {
     const playerInputs = document.querySelectorAll(".user-Container");
     const pickMark = document.querySelectorAll(".mark-Button");
 
+    if ( index === 1 ) {
+        console.log("We are dealing with Player 2"); 
+    } else if ( index === 0 ) {
+        console.log("We are dealing with Player 1"); 
+    }
     if ( playerInput.value.localeCompare("") === 0 ) {
         if ( playerInputs[index].childNodes.length >= 1 ) {
             return -1; 
@@ -49,15 +54,16 @@ function createPlayer(playerInput, index) {
        } 
        // Call function to get the mark that is selected. 
        // Call upon error if the mark is not selected yet
-       console.log("Player One Mark: " + checkPlayerOneMark(pickMark)); 
-       console.log("Player Two Mark: " + checkPlayerTwoMark(pickMark)); 
-       //const playerObject = playerFactory(playerInput.value)
-       const playerNameDiv = document.createElement("div"); 
-       playerNameDiv.textContent = playerInput.value;
-       playerNameDiv.style.color = "red"; 
-       playerNameDiv.style.fontSize = "30px";
-       playerInputs[index].appendChild(playerNameDiv); 
-       playerInput.value = ""; 
+       //console.log("Player One Mark: " + checkPlayerOneMark(pickMark)); 
+      // console.log("Player Two Mark: " + checkPlayerTwoMark(pickMark)); 
+      const playerNameDiv = document.createElement("div"); 
+      playerNameDiv.textContent = playerInput.value;
+      playerNameDiv.style.color = "red"; 
+      playerNameDiv.style.fontSize = "30px";
+      playerInputs[index].appendChild(playerNameDiv); 
+      playerInput.value = ""; 
+
+      const playerObject = playerFactory(playerInput.value, checkPlayerOneMark(pickMark));
        
    }
 
