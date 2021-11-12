@@ -28,14 +28,25 @@ function renderGameBoard(board) {
     
 }
 
+function createPlayer(playerInput) {
+    const playerInputs = document.querySelector(".user-Container");
+   // console.log(playerInput);
+    
+   if ( playerInput.textContent.localeCompare("") === 0 ) {
+       console.log(playerInput);
+   }
+
+}
+
 renderGameBoard(gameBoard.board); 
 
 console.log(playerButtons);
 
 for(let i = 0; i < playerButtons.length; i++) {
     const button = playerButtons[i]; 
+    const playerInputs = document.querySelectorAll(".player-Input-Text");
 
     button.addEventListener("click", () => {
-        
+        createPlayer(playerInputs[i]); 
     });
 }
