@@ -2,13 +2,15 @@ const playerButtons = document.querySelectorAll(".player-Button");
 
 const gameBoard = (() => { // Module for the gameboard
     let board = Array(3).fill().map(() => Array(3)); 
+    let playerOne = null;
+    let playerTwo = null;
 
-    return {board}; 
+    return {board, playerOne, playerTwo}; 
 })();
 
 const playerFactory = (name, mark) => { // Factory function for the player
     const checkMark = () => console.log(mark); 
-    return { name, checkMark };
+    return { name, mark, checkMark };
 };
 
 function renderGameBoard(board) {
@@ -28,44 +30,121 @@ function renderGameBoard(board) {
     
 }
 
-function createPlayer(playerInput, index) {
+function createPlayer(playerInput, index, listOfPlayerButtons) {
     const playerInputs = document.querySelectorAll(".user-Container");
     const pickMark = document.querySelectorAll(".mark-Button");
 
     if ( index === 1 ) {
+        // Dealing with Player 2
         console.log("We are dealing with Player 2"); 
-    } else if ( index === 0 ) {
-        console.log("We are dealing with Player 1"); 
-    }
-    if ( playerInput.value.localeCompare("") === 0 ) {
-        if ( playerInputs[index].childNodes.length >= 1 ) {
+        if ( playerInput.value.localeCompare("") === 0 ) {
+            if ( playerInputs[index].childNodes.length >= 1 ) {
+                return -1; 
+            } 
+           const alertEmpty = document.createElement("div");
+           alertEmpty.textContent = "Enter a non-empty player name!"; 
+           alertEmpty.style.color = "red"; 
+           playerInputs[index].appendChild(alertEmpty); 
+           //console.log(playerInput);
+       } else {
+          // Remove the alert first
+           if ( playerInputs[index].firstChild !== null ) {
+               playerInputs[index].firstChild.remove(); 
+           } 
+           // Call function to get the mark that is selected. 
+           // Call upon error if the mark is not selected yet
+           if ( checkPlayerTwoMark(pickMark) === -1 ) { // Check if mark is picked
+            const alertMark = document.createElement("div"); 
+            alertMark.textContent = "Please pick a mark!"; 
+            alertMark.style.color = "red"; 
+            alertMark.fontSize = "20px"; 
+            playerInputs[index].appendChild(alertMark); 
             return -1; 
-        } 
-       const alertEmpty = document.createElement("div");
-       alertEmpty.textContent = "Enter a non-empty player name!"; 
-       alertEmpty.style.color = "red"; 
-       playerInputs[index].appendChild(alertEmpty); 
-       //console.log(playerInput);
-   } else {
-      // Remove the alert first
-     //  const numberOfNodes = playerInputs[index].childNodes; 
-       if ( playerInputs[index].firstChild !== null ) {
-           playerInputs[index].firstChild.remove(); 
-       } 
-       // Call function to get the mark that is selected. 
-       // Call upon error if the mark is not selected yet
-       //console.log("Player One Mark: " + checkPlayerOneMark(pickMark)); 
-      // console.log("Player Two Mark: " + checkPlayerTwoMark(pickMark)); 
-      const playerNameDiv = document.createElement("div"); 
-      playerNameDiv.textContent = playerInput.value;
-      playerNameDiv.style.color = "red"; 
-      playerNameDiv.style.fontSize = "30px";
-      playerInputs[index].appendChild(playerNameDiv); 
-      playerInput.value = ""; 
 
-      const playerObject = playerFactory(playerInput.value, checkPlayerOneMark(pickMark));
-       
-   }
+        } else  {
+         // Remove all the text 
+         while (playerInputs[index].firstChild) {
+             playerInputs[index].removeChild(playerInputs[index].firstChild);
+         }
+        }
+          const playerNameDiv = document.createElement("div"); 
+          playerNameDiv.textContent = playerInput.value;
+          playerNameDiv.style.color = "red"; 
+          playerNameDiv.style.fontSize = "30px";
+
+          const playerMark = document.createElement("div"); // Adding the player mark to userContainer
+          playerMark.textContent = checkPlayerTwoMark(pickMark); 
+          playerMark.style.color = "red"; 
+          playerMark.style.fontSize = "50px";
+          playerInputs[index].appendChild(playerNameDiv); 
+          playerInputs[index].appendChild(playerMark); 
+          listOfPlayerButtons.disabled = true;
+          // Creating playerTwo object...
+          const playerObject = playerFactory(playerInput.value, checkPlayerTwoMark(pickMark));
+          console.log(`playerObject2: ${playerObject.name}`);
+          gameBoard.playerTwo = playerObject; 
+          playerInput.value = ""; 
+    
+          return playerObject; 
+       }
+    } else if ( index === 0 ) {
+        // Dealing with Player 1
+        console.log("We are dealing with Player 1"); 
+        if ( playerInput.value.localeCompare("") === 0 ) { // Empty username
+            if ( playerInputs[index].childNodes.length >= 1 ) {
+                return -1; 
+            } 
+           const alertEmpty = document.createElement("div");
+           alertEmpty.textContent = "Enter a non-empty player name!"; 
+           alertEmpty.style.color = "red"; 
+           playerInputs[index].appendChild(alertEmpty); 
+           //console.log(playerInput);
+       } else {
+          // Remove the alert first
+         //  const numberOfNodes = playerInputs[index].childNodes; 
+           if ( playerInputs[index].firstChild !== null ) {
+               playerInputs[index].firstChild.remove(); 
+           } 
+           // Call function to get the mark that is selected. 
+           // Call upon error if the mark is not selected yet
+           if ( checkPlayerOneMark(pickMark) === -1 ) {
+               const alertMark = document.createElement("div"); 
+               alertMark.textContent = "Please pick a mark!"; 
+               alertMark.style.color = "red"; 
+               alertMark.fontSize = "20px"; 
+               playerInputs[index].appendChild(alertMark); 
+               return -1; 
+
+           } else  {
+            // Remove all the text 
+            while (playerInputs[index].firstChild) {
+                playerInputs[index].removeChild(playerInputs[index].firstChild);
+            }
+           }
+          const playerNameDiv = document.createElement("div"); 
+          playerNameDiv.textContent = playerInput.value;
+          playerNameDiv.style.color = "red"; 
+          playerNameDiv.style.fontSize = "30px";
+
+          const playerMark = document.createElement("div"); 
+          playerMark.textContent = checkPlayerOneMark(pickMark); 
+          playerMark.style.color = "red"; 
+          playerMark.style.fontSize = "50px";
+          playerInputs[index].appendChild(playerNameDiv); 
+          playerInputs[index].appendChild(playerMark); 
+          //console.log(`button: ${listOfPlayerButtons.textContent}`);
+          listOfPlayerButtons.disabled = true;
+          // Creating playerOne object
+          const playerObject = playerFactory(playerInput.value, checkPlayerOneMark(pickMark));
+          //console.log(`playerObject1: ${playerObject.name}`);
+          gameBoard.playerOne = playerObject; 
+         // console.log(`gameBoard playerOne: ${gameBoard.playerOne.name} | playerOne Mark: ${gameBoard.playerOne.mark}`);
+          playerInput.value = ""; 
+    
+         // return playerObject;
+       }
+    }
+
 
 }
 
@@ -75,6 +154,8 @@ function checkPlayerOneMark(listOfMarks) {
     } else if ( listOfMarks[1].style.color.localeCompare("red") === 0 ) {
         return listOfMarks[1].textContent; 
     }
+
+    return -1;
 }
 
 function checkPlayerTwoMark(listOfMarks) {
@@ -83,6 +164,8 @@ function checkPlayerTwoMark(listOfMarks) {
     } else if ( listOfMarks[3].style.color.localeCompare("red") === 0 ) {
         return listOfMarks[3].textContent; 
     }
+
+    return -1;
 }
 
 function highlightMarkPicked(currentButton, listOfButtons, index) {
@@ -163,9 +246,11 @@ function addListenersToButtons() {
     for(let i = 0; i < playerButtons.length; i++) {
         const button = playerButtons[i]; 
         const playerInputs = document.querySelectorAll(".player-Input-Text");
-    
+        const playerButton = document.querySelectorAll(".player-Button");
+        
         button.addEventListener("click", () => {
-            createPlayer(playerInputs[i], i); 
+             createPlayer(playerInputs[i], i, playerButton[i]);
+            //console.log("Player Mark: " + player.mark);  
         });
     }
 }
@@ -190,4 +275,6 @@ function addListenersToMarkButtons() {
 renderGameBoard(gameBoard.board); 
 addListenersToButtons(); 
 addListenersToMarkButtons();
+
+
 
