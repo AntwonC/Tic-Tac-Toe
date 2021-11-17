@@ -16,18 +16,17 @@ const playerFactory = (name, mark) => { // Factory function for the player
 function renderGameBoard(board) {
     const boardContainer = document.querySelector(".gameBoard-Container"); 
 
-    for(let i = 0; i < gameBoard.board.length; i++) {
+    for(let i = 0; i < board.length; i++) {
         //const brElement = document.createElement("br"); 
         //boardContainer.appendChild(brElement); 
-        for(let j = 0; j < gameBoard.board[i].length; j++) {
+        for(let j = 0; j < board[i].length; j++) {
             //console.log(gameBoard.board[i][j]); 
             const divSpot = document.createElement("div"); 
             divSpot.classList.add("board-spot");
             //divSpot.textContent = gameBoard.board[i][j]; 
             boardContainer.appendChild(divSpot); 
         }
-    }
-    
+    }  
 }
 
 function createPlayer(playerInput, index, listOfPlayerButtons) {
@@ -272,9 +271,31 @@ function addListenersToMarkButtons() {
     }
 }
 
+function addClickToBoard(board, playerOne, playerTwo) {
+    const boardContainer = document.querySelector(".gameBoard-Container"); 
+
+    console.log(`In addClickToBoard()`);
+    if ( playerOne === null || playerTwo === null ) {
+        console.log(`No players created yet.`);
+    } else {
+        console.log(`playerOne: ${playerOne.name} | playerTwo: ${playerTwo.name}`);
+    }
+    //console.log(boardContainer.childNodes); 
+    let arr = Array.from(boardContainer.childNodes); 
+
+    for(let i = 0; i < arr.length; i++) {
+        arr[i].addEventListener("click", () => {
+            console.log("Clicked div!"); 
+        });
+        console.log(arr[i]); 
+    }
+
+}
+
 renderGameBoard(gameBoard.board); 
 addListenersToButtons(); 
 addListenersToMarkButtons();
+addClickToBoard(gameBoard.board, gameBoard.playerOne, gameBoard.playerTwo);
 
 
 
