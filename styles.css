@@ -9,7 +9,7 @@
 .board-spot {
     width: 100px; 
     height: 100px;
-    background-color: lightseagreen; 
+    background-color: white;
     text-align: center;
     border: 1px solid black;
 }
@@ -47,4 +47,26 @@
 
 .mark-Option {
     margin-top: 10px; 
+}
+/* GAME OPTIONS */
+.game-Start-Options {
+    display: flex; 
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#begin-Game {
+    margin-right: 5px;
+}
+
+#reset-Game {
+    margin-left: 5px;
+}
+
+/* GAME OPTIONS */
+
+.alert-Container {
+    display: flex; 
+    justify-content: center;
+    margin-top: 20px; 
 }

@@ -1,7 +1,7 @@
 const playerButtons = document.querySelectorAll(".player-Button");
 
 const gameBoard = (() => { // Module for the gameboard
-    let board = Array(3).fill().map(() => Array(3)); 
+    let board = Array.from(Array(3), () => new Array(3)); 
     let playerOne = null;
     let playerTwo = null;
 
@@ -84,7 +84,7 @@ function createPlayer(playerInput, index, listOfPlayerButtons) {
           gameBoard.playerTwo = playerObject; 
           playerInput.value = ""; 
     
-          return playerObject; 
+          //return playerObject; 
        }
     } else if ( index === 0 ) {
         // Dealing with Player 1
@@ -242,6 +242,8 @@ function highlightMarkPicked(currentButton, listOfButtons, index) {
 }
 
 function addListenersToButtons() {
+    const startGameButton = document.querySelector("#begin-Game");
+
     for(let i = 0; i < playerButtons.length; i++) {
         const button = playerButtons[i]; 
         const playerInputs = document.querySelectorAll(".player-Input-Text");
@@ -252,6 +254,11 @@ function addListenersToButtons() {
             //console.log("Player Mark: " + player.mark);  
         });
     }
+
+    startGameButton.addEventListener("click", () => {
+        startGame(gameBoard.playerOne, gameBoard.playerTwo); 
+    });
+
 }
 
 function addListenersToMarkButtons() {
@@ -279,23 +286,74 @@ function addClickToBoard(board, playerOne, playerTwo) {
         console.log(`No players created yet.`);
     } else {
         console.log(`playerOne: ${playerOne.name} | playerTwo: ${playerTwo.name}`);
+        console.log(`player One Mark: ${playerOne.mark} | player Two Mark: ${playerTwo.mark}`);
+        let arr = Array.from(boardContainer.childNodes); 
+        
+        let turnCounter = 0; 
+
+        for(let i = 0; i < arr.length; i++) {
+            arr[i].addEventListener("click", () => {
+               console.log("Clicked div!"); 
+               arr[i].textContent = playerOne.mark;
+               arr[i] = playerOne.mark; 
+               console.log(arr[i]);
+               //console.log(arr[i]); 
+            });
+           // console.log(arr[i]); 
+        }
     }
     //console.log(boardContainer.childNodes); 
-    let arr = Array.from(boardContainer.childNodes); 
 
-    for(let i = 0; i < arr.length; i++) {
-        arr[i].addEventListener("click", () => {
-            console.log("Clicked div!"); 
-        });
-        console.log(arr[i]); 
+}
+
+function startGame(playerOne, playerTwo) {
+    const startGameButton = document.querySelector("#begin-Game");
+    const alertContainer = document.querySelector(".alert-Container");
+
+    if ( playerOne === null || playerTwo === null ) {
+        
+        if ( alertContainer.childNodes.length >= 1 ) {
+            return -1;
+        }
+
+        const divAlert = document.createElement("div"); 
+        divAlert.textContent = "Add all players to the game.";
+        divAlert.style.color = "red"; 
+        divAlert.fontSize = "30px";
+        alertContainer.appendChild(divAlert); 
+    }   else {
+
+        if ( alertContainer.childNodes.length >= 1 ) {
+            alertContainer.firstChild.remove(); 
+        }
+
+        const divAlert = document.createElement("div"); 
+        divAlert.textContent = "Game started.";
+        divAlert.style.color = "red"; 
+        divAlert.fontSize = "30px";
+        alertContainer.appendChild(divAlert);
+
+        addClickToBoard(gameBoard.board, gameBoard.playerOne, gameBoard.playerTwo);
     }
 
+}
+
+function printBoard(board) {
+    for(let i = 0; i < board.length; i++) {
+        console.log("\n");
+        for(let j = 0; j < board[i].length; j++) {
+            board[i][j] = "0"; 
+            console.log(`${board[i][j]}`);
+        }
+    }
 }
 
 renderGameBoard(gameBoard.board); 
 addListenersToButtons(); 
 addListenersToMarkButtons();
-addClickToBoard(gameBoard.board, gameBoard.playerOne, gameBoard.playerTwo);
+//addClickToBoard(gameBoard.board, gameBoard.playerOne, gameBoard.playerTwo);
+printBoard(gameBoard.board); 
+
 
 
 
