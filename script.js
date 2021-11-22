@@ -1,7 +1,12 @@
 const playerButtons = document.querySelectorAll(".player-Button");
 
 const gameBoard = (() => { // Module for the gameboard
-    let board = Array.from(Array(3), () => new Array(3)); 
+    //let board = Array.from(Array(3), () => new Array(3).fill("0")); 
+    let board = new Array(3); 
+        for (let i = 0; i < 3; i++) {
+            board[i] = new Array(3); // make each element an array
+        }
+
     let playerOne = null;
     let playerTwo = null;
 
@@ -287,23 +292,51 @@ function addClickToBoard(board, playerOne, playerTwo) {
     } else {
         console.log(`playerOne: ${playerOne.name} | playerTwo: ${playerTwo.name}`);
         console.log(`player One Mark: ${playerOne.mark} | player Two Mark: ${playerTwo.mark}`);
+        // Getting a list of divs and putting that into an array to iterate on to add textContent
         let arr = Array.from(boardContainer.childNodes); 
-        
+        // TO DO: Need to be able to put the marks on the board in gameBoard module to check for winners
+        let changePlayerTurn = true; 
         let turnCounter = 0; 
 
-        for(let i = 0; i < arr.length; i++) {
+        for(let i = 0; i < board.length; i++) {
+            for(let j = 0; j < board[i].length; j++) {
+                board[i][j].addEventListener("click", () => {
+                    console.log("Clicked");
+                });
+            }
+        }
+
+       /* for(let i = 0; i < arr.length; i++) {
             arr[i].addEventListener("click", () => {
-               console.log("Clicked div!"); 
-               arr[i].textContent = playerOne.mark;
-               arr[i] = playerOne.mark; 
-               console.log(arr[i]);
+                
+               if ( changePlayerTurn ) {
+                    arr[i].textContent = playerOne.mark;
+                    arr[i] = playerOne.mark; 
+                    changePlayerTurn = false;  
+               } else {
+                    arr[i].textContent = playerTwo.mark;
+                    arr[i] = playerTwo.mark; 
+                    changePlayerTurn = true;  
+               }
+
+               turnCounter++; 
+               
+               if ( turnCounter >= 5 ) {
+                    checkWinner(board, arr);
+               }
+              // console.log("Clicked div!"); 
+              // console.log(arr[i]);
                //console.log(arr[i]); 
             });
            // console.log(arr[i]); 
         }
-    }
+    } */
     //console.log(boardContainer.childNodes); 
+    }
+}
 
+function checkWinner(board, boardArray) {
+   printBoard(board); 
 }
 
 function startGame(playerOne, playerTwo) {
@@ -340,12 +373,11 @@ function startGame(playerOne, playerTwo) {
 
 function printBoard(board) {
     for(let i = 0; i < board.length; i++) {
-        console.log("\n");
         for(let j = 0; j < board[i].length; j++) {
-            board[i][j] = "0"; 
-            console.log(`${board[i][j]}`);
+            //board[i][j] = "0";
+            console.log(board[i][j]);
         }
-    }
+     }
 }
 
 renderGameBoard(gameBoard.board); 
