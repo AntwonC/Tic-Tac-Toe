@@ -2,10 +2,10 @@ const playerButtons = document.querySelectorAll(".player-Button");
 
 const gameBoard = (() => { // Module for the gameboard
     //let board = Array.from(Array(3), () => new Array(3).fill("0")); 
-    let board = new Array(3); 
-        for (let i = 0; i < 3; i++) {
+    let board = ["-1","-1","-1","-1","-1","-1","-1","-1","-1"]; 
+     /*   for (let i = 0; i < 3; i++) {
             board[i] = new Array(3); // make each element an array
-        }
+        } */
 
     let playerOne = null;
     let playerTwo = null;
@@ -24,13 +24,12 @@ function renderGameBoard(board) {
     for(let i = 0; i < board.length; i++) {
         //const brElement = document.createElement("br"); 
         //boardContainer.appendChild(brElement); 
-        for(let j = 0; j < board[i].length; j++) {
             //console.log(gameBoard.board[i][j]); 
             const divSpot = document.createElement("div"); 
             divSpot.classList.add("board-spot");
             //divSpot.textContent = gameBoard.board[i][j]; 
             boardContainer.appendChild(divSpot); 
-        }
+        
     }  
 }
 
@@ -248,6 +247,7 @@ function highlightMarkPicked(currentButton, listOfButtons, index) {
 
 function addListenersToButtons() {
     const startGameButton = document.querySelector("#begin-Game");
+    const resetGameButton = document.querySelector("#reset-Game");
 
     for(let i = 0; i < playerButtons.length; i++) {
         const button = playerButtons[i]; 
@@ -262,6 +262,10 @@ function addListenersToButtons() {
 
     startGameButton.addEventListener("click", () => {
         startGame(gameBoard.playerOne, gameBoard.playerTwo); 
+    });
+
+    resetGameButton.addEventListener("click", () => {
+        resetGame(gameBoard.board, gameBoard.playerOne, gameBoard.playerTwo); 
     });
 
 }
@@ -298,22 +302,16 @@ function addClickToBoard(board, playerOne, playerTwo) {
         let changePlayerTurn = true; 
         let turnCounter = 0; 
 
-        for(let i = 0; i < board.length; i++) {
-            for(let j = 0; j < board[i].length; j++) {
-                board[i][j].addEventListener("click", () => {
-                    console.log("Clicked");
-                });
-            }
-        }
-
-       /* for(let i = 0; i < arr.length; i++) {
+        for(let i = 0; i < arr.length; i++) {
             arr[i].addEventListener("click", () => {
                 
                if ( changePlayerTurn ) {
+                    board[i] = playerOne.mark; 
                     arr[i].textContent = playerOne.mark;
                     arr[i] = playerOne.mark; 
                     changePlayerTurn = false;  
-               } else {
+                } else {
+                    board[i] = playerTwo.mark; 
                     arr[i].textContent = playerTwo.mark;
                     arr[i] = playerTwo.mark; 
                     changePlayerTurn = true;  
@@ -322,21 +320,37 @@ function addClickToBoard(board, playerOne, playerTwo) {
                turnCounter++; 
                
                if ( turnCounter >= 5 ) {
-                    checkWinner(board, arr);
+                    let winnerMark = checkWinner(board, arr, i);
+                    console.log(`winnerMark: ${winnerMark}`);
                }
               // console.log("Clicked div!"); 
               // console.log(arr[i]);
                //console.log(arr[i]); 
             });
            // console.log(arr[i]); 
+                //printBoard(board); 
         }
-    } */
+    } 
     //console.log(boardContainer.childNodes); 
-    }
 }
 
-function checkWinner(board, boardArray) {
-   printBoard(board); 
+
+function checkWinner(board, boardArray, boardSpot) {
+    printBoard(board); 
+    console.log(`boardSpot: ${boardSpot}`); 
+    // Hard code each spot 
+    if ( boardSpot === 0 ) { // 0 spot
+        let boardSpotMark = board[boardSpot]; // Get the mark in the spot 
+        if ( (board[boardSpot+1].localeCompare(boardSpotMark) === 0) && (board[boardSpot+2].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark; 
+        } else if ( (board[3].localeCompare(boardSpotMark) === 0) && (board[6].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark;
+        } else if ( (board[4].localeCompare(boardSpotMark) === 0) && (board[8].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark;
+        }
+    }
+
+
 }
 
 function startGame(playerOne, playerTwo) {
@@ -371,13 +385,33 @@ function startGame(playerOne, playerTwo) {
 
 }
 
-function printBoard(board) {
-    for(let i = 0; i < board.length; i++) {
-        for(let j = 0; j < board[i].length; j++) {
-            //board[i][j] = "0";
-            console.log(board[i][j]);
+function resetGame(board, playerOne, playerTwo) {
+    const alertContainer = document.querySelector(".alert-Container");
+    
+
+    /*for(let i = 0; i < board.length; i++) {
+        if ( board[i].localeCompare("-1") !== 0 ) {
+            
         }
-     }
+    } */
+    board = ["-1","-1","-1","-1","-1","-1","-1","-1","-1"];
+    // TO DO: Need to reset the divs as well
+    if ( alertContainer.childNodes.length >= 1 ) {
+        alertContainer.firstChild().remove(); 
+
+        const divAlert = document.createElement("div"); 
+        divAlert.textContent = "Game has been reset"; 
+        divAlert.style.color = "red"; 
+        divAlert.fontSize = "30px";
+        alertContainer.appendChild(divAlert); 
+    
+    }
+
+
+}
+
+function printBoard(board) {
+    console.log(board);
 }
 
 renderGameBoard(gameBoard.board); 
