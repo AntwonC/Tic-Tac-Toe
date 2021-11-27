@@ -9,8 +9,9 @@ const gameBoard = (() => { // Module for the gameboard
 
     let playerOne = null;
     let playerTwo = null;
+    let gameStarted = false;
 
-    return {board, playerOne, playerTwo}; 
+    return {board, playerOne, playerTwo, gameStarted}; 
 })();
 
 const playerFactory = (name, mark) => { // Factory function for the player
@@ -248,6 +249,7 @@ function highlightMarkPicked(currentButton, listOfButtons, index) {
 function addListenersToButtons() {
     const startGameButton = document.querySelector("#begin-Game");
     const resetGameButton = document.querySelector("#reset-Game");
+    const alertContainer = document.querySelector(".alert-Container");
 
     for(let i = 0; i < playerButtons.length; i++) {
         const button = playerButtons[i]; 
@@ -261,11 +263,21 @@ function addListenersToButtons() {
     }
 
     startGameButton.addEventListener("click", () => {
-        startGame(gameBoard.playerOne, gameBoard.playerTwo); 
+        startGame(gameBoard.board, gameBoard.playerOne, gameBoard.playerTwo); 
     });
 
     resetGameButton.addEventListener("click", () => {
-        resetGame(gameBoard.board, gameBoard.playerOne, gameBoard.playerTwo); 
+        resetGame(gameBoard.board, gameBoard.playerOne, gameBoard.playerTwo);
+        if ( alertContainer.childNodes.length >= 1 ) {
+            alertContainer.firstChild.remove(); 
+    
+            const divAlert = document.createElement("div"); 
+            divAlert.textContent = "Game has been reset. Click the \"Start Game\" button to begin the game."; 
+            divAlert.style.color = "red"; 
+            divAlert.fontSize = "30px";
+            alertContainer.appendChild(divAlert); 
+        
+        } 
     });
 
 }
@@ -287,6 +299,8 @@ function addListenersToMarkButtons() {
     }
 }
 
+
+
 function addClickToBoard(board, playerOne, playerTwo) {
     const boardContainer = document.querySelector(".gameBoard-Container"); 
 
@@ -299,38 +313,47 @@ function addClickToBoard(board, playerOne, playerTwo) {
         // Getting a list of divs and putting that into an array to iterate on to add textContent
         let arr = Array.from(boardContainer.childNodes); 
         // TO DO: Need to be able to put the marks on the board in gameBoard module to check for winners
+        // TO DO: Make sure the next mark is on a proper spot
         let changePlayerTurn = true; 
         let turnCounter = 0; 
+        
+         
+            for(let i = 0; i < arr.length; i++) {
+                arr[i].addEventListener("click", () => {
+                   // console.log(`arr[i].textContent: ${arr[i].textContent}`); 
+                // Check for mark. For some reason, it is undefined, but this will work as just need 
+                // to not skip another players turn
+                if ( arr[i].textContent === undefined ) {
+                    return;
+                }
+                    
+                if ( changePlayerTurn ) {
+                        board[i] = playerOne.mark; 
+                        arr[i].textContent = playerOne.mark;
+                        arr[i] = playerOne.mark; 
+                        changePlayerTurn = false;  
+                    } else {
+                        board[i] = playerTwo.mark; 
+                        arr[i].textContent = playerTwo.mark;
+                        arr[i] = playerTwo.mark; 
+                        changePlayerTurn = true;  
+                }
 
-        for(let i = 0; i < arr.length; i++) {
-            arr[i].addEventListener("click", () => {
-                
-               if ( changePlayerTurn ) {
-                    board[i] = playerOne.mark; 
-                    arr[i].textContent = playerOne.mark;
-                    arr[i] = playerOne.mark; 
-                    changePlayerTurn = false;  
-                } else {
-                    board[i] = playerTwo.mark; 
-                    arr[i].textContent = playerTwo.mark;
-                    arr[i] = playerTwo.mark; 
-                    changePlayerTurn = true;  
-               }
-
-               turnCounter++; 
-               
-               if ( turnCounter >= 5 ) {
-                    let winnerMark = checkWinner(board, arr, i);
-                    console.log(`winnerMark: ${winnerMark}`);
-               }
-              // console.log("Clicked div!"); 
-              // console.log(arr[i]);
-               //console.log(arr[i]); 
-            });
-           // console.log(arr[i]); 
-                //printBoard(board); 
+                turnCounter++; 
+                printBoard(board); 
+                if ( turnCounter >= 5 ) {
+                        let winnerMark = checkWinner(board, arr, i);
+                        console.log(`winnerMark: ${winnerMark}`);
+                }
+                // console.log("Clicked div!"); 
+                // console.log(arr[i]);
+                //console.log(arr[i]); 
+                });
+            // console.log(arr[i]); 
+                    
+            }
         }
-    } 
+    
     //console.log(boardContainer.childNodes); 
 }
 
@@ -353,7 +376,7 @@ function checkWinner(board, boardArray, boardSpot) {
 
 }
 
-function startGame(playerOne, playerTwo) {
+function startGame(board, playerOne, playerTwo) {
     const startGameButton = document.querySelector("#begin-Game");
     const alertContainer = document.querySelector(".alert-Container");
 
@@ -379,34 +402,35 @@ function startGame(playerOne, playerTwo) {
         divAlert.style.color = "red"; 
         divAlert.fontSize = "30px";
         alertContainer.appendChild(divAlert);
-
-        addClickToBoard(gameBoard.board, gameBoard.playerOne, gameBoard.playerTwo);
+        
+        // Reset the board before 
+        resetGame(board, playerOne, playerTwo);
+        addClickToBoard(board, playerOne, playerTwo);
     }
 
 }
 
 function resetGame(board, playerOne, playerTwo) {
     const alertContainer = document.querySelector(".alert-Container");
-    
+    const boardContainer = document.querySelector(".gameBoard-Container"); 
 
     /*for(let i = 0; i < board.length; i++) {
         if ( board[i].localeCompare("-1") !== 0 ) {
             
         }
     } */
-    board = ["-1","-1","-1","-1","-1","-1","-1","-1","-1"];
-    // TO DO: Need to reset the divs as well
-    if ( alertContainer.childNodes.length >= 1 ) {
-        alertContainer.firstChild().remove(); 
-
-        const divAlert = document.createElement("div"); 
-        divAlert.textContent = "Game has been reset"; 
-        divAlert.style.color = "red"; 
-        divAlert.fontSize = "30px";
-        alertContainer.appendChild(divAlert); 
-    
+    for(let i = 0; i < board.length; i++) {
+        board[i] = "-1"; 
     }
 
+    let arr = Array.from(boardContainer.childNodes); 
+
+
+    // TO DO: Need to reset the divs as well
+    for(let i = 0; i < arr.length; i++) {
+        arr[i].textContent = null; 
+        //arr[i].removeEventListener("click", ());
+    }
 
 }
 
