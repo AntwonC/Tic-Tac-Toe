@@ -71,3 +71,9 @@
     justify-content: center;
     margin-top: 20px; 
 }
+
+.winner-Container {
+    display: flex; 
+    justify-content: center; 
+    margin-top: 20px; 
+}

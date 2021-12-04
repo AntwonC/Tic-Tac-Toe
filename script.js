@@ -303,6 +303,7 @@ function addListenersToMarkButtons() {
 
 function addClickToBoard(board, playerOne, playerTwo) {
     const boardContainer = document.querySelector(".gameBoard-Container"); 
+    const winner = document.querySelector(".winner-Container"); 
 
     console.log(`In addClickToBoard()`);
     if ( playerOne === null || playerTwo === null ) {
@@ -344,6 +345,19 @@ function addClickToBoard(board, playerOne, playerTwo) {
                 if ( turnCounter >= 5 ) {
                         let winnerMark = checkWinner(board, arr, i);
                         console.log(`winnerMark: ${winnerMark}`);
+                        const winAlert = document.createElement("div");
+
+                        if ( winnerMark === undefined ) {
+                            return; 
+                        } else if ( winnerMark.localeCompare(playerOne.mark) === 0 ) {
+                            winAlert.textContent = playerOne.name + " is the winner!"; 
+                        } else if ( winnerMark.localeCompare(playerOne.mark) === 0 ) {
+                            winAlert.textContent = playerTwo.name + " is the winner!"; 
+                        }
+
+                        winAlert.color = "red"; 
+                        winAlert.fontSize = "25px"; 
+                        winner.appendChild(winAlert); 
                 }
                 // console.log("Clicked div!"); 
                 // console.log(arr[i]);
@@ -369,6 +383,70 @@ function checkWinner(board, boardArray, boardSpot) {
         } else if ( (board[3].localeCompare(boardSpotMark) === 0) && (board[6].localeCompare(boardSpotMark) === 0) ) {
             return boardSpotMark;
         } else if ( (board[4].localeCompare(boardSpotMark) === 0) && (board[8].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark;
+        }
+    } else if ( boardSpot === 1 ) {
+        let boardSpotMark = board[boardSpot]; // Get the mark in the spot 
+        if ( (board[boardSpot-1].localeCompare(boardSpotMark) === 0) && (board[boardSpot+1].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark; 
+        } else if ( (board[4].localeCompare(boardSpotMark) === 0) && (board[7].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark;
+        }
+    } else if ( boardSpot === 2 ) {
+        let boardSpotMark = board[boardSpot]; // Get the mark in the spot 
+        if ( (board[5].localeCompare(boardSpotMark) === 0) && (board[8].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark; 
+        } else if ( (board[4].localeCompare(boardSpotMark) === 0) && (board[6].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark;
+        } else if ( (board[1].localeCompare(boardSpotMark) === 0) && (board[0].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark; 
+        } 
+    } else if ( boardSpot === 3 ) {
+        let boardSpotMark = board[boardSpot]; // Get the mark in the spot 
+        if ( (board[0].localeCompare(boardSpotMark) === 0) && (board[6].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark; 
+        } else if ( (board[4].localeCompare(boardSpotMark) === 0) && (board[5].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark;
+        }
+    } else if ( boardSpot === 4 ) {
+        let boardSpotMark = board[boardSpot]; // Get the mark in the spot 
+        if ( (board[1].localeCompare(boardSpotMark) === 0) && (board[7].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark; 
+        } else if ( (board[3].localeCompare(boardSpotMark) === 0) && (board[5].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark;
+        } else if ( (board[0].localeCompare(boardSpotMark) === 0) && (board[8].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark;
+        }
+    } else if ( boardSpot === 5 ) {
+        let boardSpotMark = board[boardSpot]; // Get the mark in the spot 
+        if ( (board[2].localeCompare(boardSpotMark) === 0) && (board[8].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark; 
+        } else if ( (board[3].localeCompare(boardSpotMark) === 0) && (board[4].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark;
+        } 
+    } else if ( boardSpot === 6 ) {
+        let boardSpotMark = board[boardSpot]; // Get the mark in the spot 
+        if ( (board[0].localeCompare(boardSpotMark) === 0) && (board[3].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark; 
+        } else if ( (board[7].localeCompare(boardSpotMark) === 0) && (board[8].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark;
+        } else if ( (board[4].localeCompare(boardSpotMark) === 0) && (board[2].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark;
+        }
+    } else if ( boardSpot === 7 ) {
+        let boardSpotMark = board[boardSpot]; // Get the mark in the spot 
+        if ( (board[1].localeCompare(boardSpotMark) === 0) && (board[4].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark; 
+        } else if ( (board[6].localeCompare(boardSpotMark) === 0) && (board[8].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark;
+        }
+    } else if ( boardSpot === 8 ) {
+        let boardSpotMark = board[boardSpot]; // Get the mark in the spot 
+        if ( (board[0].localeCompare(boardSpotMark) === 0) && (board[4].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark; 
+        } else if ( (board[5].localeCompare(boardSpotMark) === 0) && (board[2].localeCompare(boardSpotMark) === 0) ) {
+            return boardSpotMark;
+        } else if ( (board[6].localeCompare(boardSpotMark) === 0) && (board[7].localeCompare(boardSpotMark) === 0) ) {
             return boardSpotMark;
         }
     }
