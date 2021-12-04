@@ -303,7 +303,7 @@ function addListenersToMarkButtons() {
 
 function addClickToBoard(board, playerOne, playerTwo) {
     const boardContainer = document.querySelector(".gameBoard-Container"); 
-    const winner = document.querySelector(".winner-Container"); 
+    const winnerContainer = document.querySelector(".winner-Container"); 
 
     console.log(`In addClickToBoard()`);
     if ( playerOne === null || playerTwo === null ) {
@@ -343,22 +343,34 @@ function addClickToBoard(board, playerOne, playerTwo) {
                 turnCounter++; 
                 printBoard(board); 
                 if ( turnCounter >= 5 ) {
+
                         let winnerMark = checkWinner(board, arr, i);
                         console.log(`winnerMark: ${winnerMark}`);
                         const winAlert = document.createElement("div");
+                        const tieAlert = document.createElement("div");
 
-                        if ( winnerMark === undefined ) {
-                            return; 
+                        let tieCondition = checkTie(board, i);
+                        console.log(`tieCondition: ${tieCondition}`);
+
+                        if ( tieCondition ) {
+                            tieAlert.textContent = "Tie Game!";
+                            tieAlert.style.color = "red"; 
+                            tieAlert.style.fontSize = "50px";
+                            //tieAlert.style.fontFamily = "bold";
+                            winnerContainer.appendChild(tieAlert); 
+
                         } else if ( winnerMark.localeCompare(playerOne.mark) === 0 ) {
                             winAlert.textContent = playerOne.name + " is the winner!"; 
+                            winAlert.color = "red"; 
+                            winAlert.fontSize = "25px"; 
+                            winnerContainer.appendChild(winAlert); 
                         } else if ( winnerMark.localeCompare(playerOne.mark) === 0 ) {
+                            winAlert.color = "red"; 
+                            winAlert.fontSize = "25px"; 
                             winAlert.textContent = playerTwo.name + " is the winner!"; 
-                        }
-
-                        winAlert.color = "red"; 
-                        winAlert.fontSize = "25px"; 
-                        winner.appendChild(winAlert); 
-                }
+                            winnerContainer.appendChild(winAlert); 
+                        } 
+                    }
                 // console.log("Clicked div!"); 
                 // console.log(arr[i]);
                 //console.log(arr[i]); 
@@ -371,10 +383,27 @@ function addClickToBoard(board, playerOne, playerTwo) {
     //console.log(boardContainer.childNodes); 
 }
 
+function checkTie(boardArray, boardSpot) {
+    console.log("-------------------START---------------------------");
+    let isTie = false; 
+    console.log(`In checkTie(): boardArray: ${boardArray.toString()}`);
+    for(let i = 0; i < boardArray.length; i++) {
+        console.log(`boardArray[i]: ${boardArray[i]}`);
+
+        if ( boardArray[i].localeCompare("-1") === 0 ) {
+            return false;
+        }
+    }
+    console.log("-------------------END--------------------------");
+
+     
+    return true;
+}
 
 function checkWinner(board, boardArray, boardSpot) {
     printBoard(board); 
-    console.log(`boardSpot: ${boardSpot}`); 
+    console.log(`boardSpot: ${boardSpot}`);
+
     // Hard code each spot 
     if ( boardSpot === 0 ) { // 0 spot
         let boardSpotMark = board[boardSpot]; // Get the mark in the spot 
@@ -451,7 +480,7 @@ function checkWinner(board, boardArray, boardSpot) {
         }
     }
 
-
+    return "-1";
 }
 
 function startGame(board, playerOne, playerTwo) {
