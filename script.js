@@ -305,6 +305,8 @@ function addClickToBoard(board, playerOne, playerTwo) {
     const boardContainer = document.querySelector(".gameBoard-Container"); 
     const winnerContainer = document.querySelector(".winner-Container"); 
 
+    let didWinYet = false; 
+
     console.log(`In addClickToBoard()`);
     if ( playerOne === null || playerTwo === null ) {
         console.log(`No players created yet.`);
@@ -320,8 +322,14 @@ function addClickToBoard(board, playerOne, playerTwo) {
         
          
             for(let i = 0; i < arr.length; i++) {
+                
                 arr[i].addEventListener("click", () => {
-                   // console.log(`arr[i].textContent: ${arr[i].textContent}`); 
+                    // Exit out if already won
+                    if ( didWinYet ) {
+                        console.log("Already won"); 
+                        return; 
+                    }
+                    // console.log(`arr[i].textContent: ${arr[i].textContent}`); 
                 // Check for mark. For some reason, it is undefined, but this will work as just need 
                 // to not skip another players turn
                 if ( arr[i].textContent === undefined ) {
@@ -352,23 +360,30 @@ function addClickToBoard(board, playerOne, playerTwo) {
                         let tieCondition = checkTie(board, i);
                         console.log(`tieCondition: ${tieCondition}`);
 
-                        if ( tieCondition ) {
-                            tieAlert.textContent = "Tie Game!";
-                            tieAlert.style.color = "red"; 
-                            tieAlert.style.fontSize = "50px";
-                            //tieAlert.style.fontFamily = "bold";
-                            winnerContainer.appendChild(tieAlert); 
-
-                        } else if ( winnerMark.localeCompare(playerOne.mark) === 0 ) {
+                        if ( winnerMark.localeCompare(playerOne.mark) === 0 ) {
                             winAlert.textContent = playerOne.name + " is the winner!"; 
                             winAlert.color = "red"; 
                             winAlert.fontSize = "25px"; 
                             winnerContainer.appendChild(winAlert); 
-                        } else if ( winnerMark.localeCompare(playerOne.mark) === 0 ) {
+                            didWinYet = true; 
+                        } else if ( winnerMark.localeCompare(playerTwo.mark) === 0 ) {
                             winAlert.color = "red"; 
                             winAlert.fontSize = "25px"; 
                             winAlert.textContent = playerTwo.name + " is the winner!"; 
                             winnerContainer.appendChild(winAlert); 
+                            didWinYet = true; 
+                        } else if ( tieCondition ) {
+
+                            if ( winnerContainer.childNodes.length >= 1 ) {
+                                return; 
+                            } else {
+                                tieAlert.textContent = "Tie Game!";
+                                tieAlert.style.color = "red"; 
+                                tieAlert.style.fontSize = "50px";
+                                //tieAlert.style.fontFamily = "bold";
+                                winnerContainer.appendChild(tieAlert); 
+                            }
+
                         } 
                     }
                 // console.log("Clicked div!"); 
@@ -384,17 +399,17 @@ function addClickToBoard(board, playerOne, playerTwo) {
 }
 
 function checkTie(boardArray, boardSpot) {
-    console.log("-------------------START---------------------------");
-    let isTie = false; 
-    console.log(`In checkTie(): boardArray: ${boardArray.toString()}`);
+   // console.log("-------------------START---------------------------");
+    
+    //console.log(`In checkTie(): boardArray: ${boardArray.toString()}`);
     for(let i = 0; i < boardArray.length; i++) {
-        console.log(`boardArray[i]: ${boardArray[i]}`);
+       // console.log(`boardArray[i]: ${boardArray[i]}`);
 
         if ( boardArray[i].localeCompare("-1") === 0 ) {
             return false;
         }
     }
-    console.log("-------------------END--------------------------");
+    //console.log("-------------------END--------------------------");
 
      
     return true;
@@ -402,7 +417,7 @@ function checkTie(boardArray, boardSpot) {
 
 function checkWinner(board, boardArray, boardSpot) {
     printBoard(board); 
-    console.log(`boardSpot: ${boardSpot}`);
+    console.log(`boardSpotMark: ${board[boardSpot]}`);
 
     // Hard code each spot 
     if ( boardSpot === 0 ) { // 0 spot
@@ -480,7 +495,16 @@ function checkWinner(board, boardArray, boardSpot) {
         }
     }
 
-    return "-1";
+    return "-1"; // Nobody has won the game yet
+}
+
+function determineStartTurn(playerOne, playerTwo) {
+    console.log(`-------------------DETERMINE START TURN----------------------------------`);
+    let randomTurn = Math.floor(Math.random() * ( 1 - 0 + 1) + 0 ); 
+    
+    console.log(`randomTurn: ${randomTurn}`);
+    console.log(`-------------------DETERMINE START TURN----------------------------------`);
+    
 }
 
 function startGame(board, playerOne, playerTwo) {
@@ -513,6 +537,8 @@ function startGame(board, playerOne, playerTwo) {
         // Reset the board before 
         resetGame(board, playerOne, playerTwo);
         addClickToBoard(board, playerOne, playerTwo);
+
+        let getFirstTurn = determineStartTurn(playerOne, playerTwo); 
     }
 
 }
@@ -520,7 +546,9 @@ function startGame(board, playerOne, playerTwo) {
 function resetGame(board, playerOne, playerTwo) {
     const alertContainer = document.querySelector(".alert-Container");
     const boardContainer = document.querySelector(".gameBoard-Container"); 
-
+    const winnerContainer = document.querySelector(".winner-Container"); 
+    
+    printBoard(board);
     /*for(let i = 0; i < board.length; i++) {
         if ( board[i].localeCompare("-1") !== 0 ) {
             
@@ -531,6 +559,14 @@ function resetGame(board, playerOne, playerTwo) {
     }
 
     let arr = Array.from(boardContainer.childNodes); 
+
+    // Removes all children from the winnerContainer to empty it
+    while ( winnerContainer.firstChild ) {
+        winnerContainer.removeChild(winnerContainer.firstChild); 
+    }
+
+
+    console.log(`length: ${winnerContainer.childNodes.length}`);
 
 
     // TO DO: Need to reset the divs as well
