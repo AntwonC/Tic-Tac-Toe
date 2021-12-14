@@ -301,13 +301,14 @@ function addListenersToMarkButtons() {
 
 
 
-function addClickToBoard(board, playerOne, playerTwo) {
+function addClickToBoard(board, playerOne, playerTwo, firstTurn) {
     const boardContainer = document.querySelector(".gameBoard-Container"); 
     const winnerContainer = document.querySelector(".winner-Container"); 
+    const alertContainer = document.querySelector(".alert-Container"); 
 
     let didWinYet = false; 
 
-    console.log(`In addClickToBoard()`);
+    
     if ( playerOne === null || playerTwo === null ) {
         console.log(`No players created yet.`);
     } else {
@@ -318,6 +319,21 @@ function addClickToBoard(board, playerOne, playerTwo) {
         // TO DO: Need to be able to put the marks on the board in gameBoard module to check for winners
         // TO DO: Make sure the next mark is on a proper spot
         let changePlayerTurn = true; 
+        const playerFirstTurn = document.createElement("div"); 
+
+        if ( firstTurn === 1 ) {
+            console.log("O goes first");
+            playerFirstTurn.textContent = "O goes first!"; 
+            playerFirstTurn.fontSize = "35px";
+            changePlayerTurn = false; 
+        } else {
+            console.log("X goes first"); 
+            playerFirstTurn.textContent = "X goes first!"; 
+            playerFirstTurn.fontSize = "35px";
+            changePlayerTurn = true;
+        }
+
+        alertContainer.appendChild(playerFirstTurn);
         let turnCounter = 0; 
         
          
@@ -504,7 +520,7 @@ function determineStartTurn(playerOne, playerTwo) {
     
     console.log(`randomTurn: ${randomTurn}`);
     console.log(`-------------------DETERMINE START TURN----------------------------------`);
-    
+    return randomTurn;
 }
 
 function startGame(board, playerOne, playerTwo) {
@@ -536,9 +552,9 @@ function startGame(board, playerOne, playerTwo) {
         
         // Reset the board before 
         resetGame(board, playerOne, playerTwo);
-        addClickToBoard(board, playerOne, playerTwo);
-
         let getFirstTurn = determineStartTurn(playerOne, playerTwo); 
+        addClickToBoard(board, playerOne, playerTwo, getFirstTurn);
+
     }
 
 }
@@ -549,11 +565,7 @@ function resetGame(board, playerOne, playerTwo) {
     const winnerContainer = document.querySelector(".winner-Container"); 
     
     printBoard(board);
-    /*for(let i = 0; i < board.length; i++) {
-        if ( board[i].localeCompare("-1") !== 0 ) {
-            
-        }
-    } */
+
     for(let i = 0; i < board.length; i++) {
         board[i] = "-1"; 
     }
