@@ -69,7 +69,10 @@
 .alert-Container {
     display: flex; 
     justify-content: center;
+    flex-direction: column;
     margin-top: 20px; 
+    align-items: center;
+    
 }
 
 .winner-Container {

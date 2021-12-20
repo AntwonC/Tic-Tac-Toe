@@ -321,15 +321,29 @@ function addClickToBoard(board, playerOne, playerTwo, firstTurn) {
         let changePlayerTurn = true; 
         const playerFirstTurn = document.createElement("div"); 
 
-        if ( firstTurn === 1 ) {
+        if ( firstTurn === 1 && (playerOne.mark.localeCompare("X") === 0) && (playerTwo.mark.localeCompare("O") === 0) ) {
             console.log("O goes first");
             playerFirstTurn.textContent = "O goes first!"; 
-            playerFirstTurn.fontSize = "35px";
+            playerFirstTurn.style.color = "blue"; 
+            playerFirstTurn.style.fontSize = "40px";
             changePlayerTurn = false; 
-        } else {
+        } else if ( firstTurn === 1 && (playerOne.mark.localeCompare("O") === 0) && (playerTwo.mark.localeCompare("X") === 0) ) {
             console.log("X goes first"); 
             playerFirstTurn.textContent = "X goes first!"; 
-            playerFirstTurn.fontSize = "35px";
+            playerFirstTurn.style.color = "blue"; 
+            playerFirstTurn.style.fontSize = "40px";
+            changePlayerTurn = false;
+        } else if ( firstTurn === 0 && (playerOne.mark.localeCompare("O") === 0) && (playerTwo.mark.localeCompare("X") === 0) ) {
+            console.log("O goes first");
+            playerFirstTurn.textContent = "O goes first!"; 
+            playerFirstTurn.style.color = "blue"; 
+            playerFirstTurn.style.fontSize = "40px";
+            changePlayerTurn = true; 
+        } else if ( firstTurn === 0 && (playerOne.mark.localeCompare("X") === 0) && (playerTwo.mark.localeCompare("O") === 0) ) {
+            console.log("X goes first"); 
+            playerFirstTurn.textContent = "X goes first!"; 
+            playerFirstTurn.style.color = "blue"; 
+            playerFirstTurn.style.fontSize = "40px";
             changePlayerTurn = true;
         }
 
@@ -343,16 +357,17 @@ function addClickToBoard(board, playerOne, playerTwo, firstTurn) {
                     // Exit out if already won
                     if ( didWinYet ) {
                         console.log("Already won"); 
+                        //didWinYet = false;
                         return; 
                     }
                     // console.log(`arr[i].textContent: ${arr[i].textContent}`); 
-                // Check for mark. For some reason, it is undefined, but this will work as just need 
-                // to not skip another players turn
-                if ( arr[i].textContent === undefined ) {
-                    return;
-                }
+                    // Check for mark. For some reason, it is undefined, but this will work as just need 
+                    // to not skip another players turn
+                    if ( arr[i].textContent === undefined ) {
+                        return;
+                    }
                     
-                if ( changePlayerTurn ) {
+                    if ( changePlayerTurn ) {
                         board[i] = playerOne.mark; 
                         arr[i].textContent = playerOne.mark;
                         arr[i] = playerOne.mark; 
@@ -362,34 +377,34 @@ function addClickToBoard(board, playerOne, playerTwo, firstTurn) {
                         arr[i].textContent = playerTwo.mark;
                         arr[i] = playerTwo.mark; 
                         changePlayerTurn = true;  
-                }
-
-                turnCounter++; 
-                printBoard(board); 
-                if ( turnCounter >= 5 ) {
-
+                    }
+                    
+                    turnCounter++; 
+                    // printBoard(board); 
+                    if ( turnCounter >= 5 ) {
+                        
                         let winnerMark = checkWinner(board, arr, i);
                         console.log(`winnerMark: ${winnerMark}`);
                         const winAlert = document.createElement("div");
                         const tieAlert = document.createElement("div");
-
+                        
                         let tieCondition = checkTie(board, i);
                         console.log(`tieCondition: ${tieCondition}`);
-
+                        
                         if ( winnerMark.localeCompare(playerOne.mark) === 0 ) {
                             winAlert.textContent = playerOne.name + " is the winner!"; 
-                            winAlert.color = "red"; 
-                            winAlert.fontSize = "25px"; 
+                            winAlert.style.color = "yellow"; 
+                            winAlert.style.fontSize = "50px"; 
                             winnerContainer.appendChild(winAlert); 
                             didWinYet = true; 
                         } else if ( winnerMark.localeCompare(playerTwo.mark) === 0 ) {
-                            winAlert.color = "red"; 
-                            winAlert.fontSize = "25px"; 
+                            winAlert.style.color = "yellow"; 
+                            winAlert.style.fontSize = "50px"; 
                             winAlert.textContent = playerTwo.name + " is the winner!"; 
                             winnerContainer.appendChild(winAlert); 
                             didWinYet = true; 
                         } else if ( tieCondition ) {
-
+                            
                             if ( winnerContainer.childNodes.length >= 1 ) {
                                 return; 
                             } else {
@@ -399,15 +414,16 @@ function addClickToBoard(board, playerOne, playerTwo, firstTurn) {
                                 //tieAlert.style.fontFamily = "bold";
                                 winnerContainer.appendChild(tieAlert); 
                             }
-
+                            
                         } 
                     }
-                // console.log("Clicked div!"); 
-                // console.log(arr[i]);
-                //console.log(arr[i]); 
+
+                    // console.log("Clicked div!"); 
+                    // console.log(arr[i]);
+                    //console.log(arr[i]); 
                 });
-            // console.log(arr[i]); 
-                    
+                // console.log(arr[i]); 
+                
             }
         }
     
@@ -432,8 +448,8 @@ function checkTie(boardArray, boardSpot) {
 }
 
 function checkWinner(board, boardArray, boardSpot) {
-    printBoard(board); 
-    console.log(`boardSpotMark: ${board[boardSpot]}`);
+    //printBoard(board); 
+    //console.log(`boardSpotMark: ${board[boardSpot]}`);
 
     // Hard code each spot 
     if ( boardSpot === 0 ) { // 0 spot
@@ -515,11 +531,11 @@ function checkWinner(board, boardArray, boardSpot) {
 }
 
 function determineStartTurn(playerOne, playerTwo) {
-    console.log(`-------------------DETERMINE START TURN----------------------------------`);
+    //console.log(`-------------------DETERMINE START TURN----------------------------------`);
     let randomTurn = Math.floor(Math.random() * ( 1 - 0 + 1) + 0 ); 
     
-    console.log(`randomTurn: ${randomTurn}`);
-    console.log(`-------------------DETERMINE START TURN----------------------------------`);
+   console.log(`randomTurn: ${randomTurn}`);
+   // console.log(`-------------------DETERMINE START TURN----------------------------------`);
     return randomTurn;
 }
 
@@ -564,21 +580,26 @@ function resetGame(board, playerOne, playerTwo) {
     const boardContainer = document.querySelector(".gameBoard-Container"); 
     const winnerContainer = document.querySelector(".winner-Container"); 
     
-    printBoard(board);
+   // printBoard(board);
 
     for(let i = 0; i < board.length; i++) {
         board[i] = "-1"; 
     }
 
-    let arr = Array.from(boardContainer.childNodes); 
-
+    
     // Removes all children from the winnerContainer to empty it
     while ( winnerContainer.firstChild ) {
         winnerContainer.removeChild(winnerContainer.firstChild); 
     }
-
-
-    console.log(`length: ${winnerContainer.childNodes.length}`);
+    
+    // Removes all children from the alertContainer to empty it
+    while ( alertContainer.firstChild ) {
+        alertContainer.removeChild(alertContainer.firstChild); 
+    }
+    
+    
+    //console.log(`length: ${winnerContainer.childNodes.length}`);
+    let arr = Array.from(boardContainer.childNodes); 
 
 
     // TO DO: Need to reset the divs as well
